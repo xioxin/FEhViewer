@@ -1,0 +1,43 @@
+name: Build release
+
+# on: [push, pull_request]
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build_and_upload:
+    name: Build and upload
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - os: macos-latest
+            artifact_name: fehviewer.dmg
+            script: macos.sh
+            asset_name: feh_{{ github.ref }}.dmg
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - run: bash script/actions/fix-config.sh
+    - uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+    - run: flutter --version
+    - run: flutter config --enable-windows-desktop --enable-linux-desktop --enable-macos-desktop
+    - name: Pub get
+      run: flutter pub get
+    - name: Build
+      run: bash script/actions/${{ matrix.script }}
+    - name: Upload binary
+      uses: svenstaro/upload-release-action@v1-release
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./${{ matrix.artifact_name }}
+        asset_name: ${{ matrix.asset_name }}
+        tag: ${{ github.ref }}
