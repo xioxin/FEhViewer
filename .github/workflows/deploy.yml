@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - run: bash script/actions/fix-config.sh
+    - run: bash scripts/actions/fix-config.sh
     - uses: actions/setup-java@v2
       with:
         distribution: 'zulu'
@@ -33,7 +33,7 @@ jobs:
     - name: Pub get
       run: flutter pub get
     - name: Build
-      run: bash script/actions/${{ matrix.script }}
+      run: bash scripts/actions/${{ matrix.script }}
     - name: Upload binary
       uses: svenstaro/upload-release-action@v1-release
       with:
