@@ -1,5 +1,4 @@
 #!/bin/bash
-cd ../..
 
 rm macos/Podfile.lock
 
