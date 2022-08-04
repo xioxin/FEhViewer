@@ -16,7 +16,7 @@ jobs:
           - os: macos-latest
             artifact_name: fehviewer.dmg
             script: macos.sh
-            asset_name: feh_{{ github.ref }}.dmg
+            asset_name: feh_${{ github.ref }}.dmg
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
